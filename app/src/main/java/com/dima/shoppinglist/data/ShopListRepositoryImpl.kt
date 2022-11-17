@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.dima.shoppinglist.domain.ShopItem
 import com.dima.shoppinglist.domain.ShopListRepository
-import java.lang.RuntimeException
 
 object ShopListRepositoryImpl : ShopListRepository {
 
