@@ -1,11 +1,14 @@
 package com.dima.shoppinglist.data
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.dima.shoppinglist.domain.ShopItem
 import com.dima.shoppinglist.domain.ShopListRepository
 import java.lang.RuntimeException
 
 object ShopListRepositoryImpl : ShopListRepository {
 
+    private val shopListLiveData = MutableLiveData<List<ShopItem>>()
     private val shopList = mutableListOf<ShopItem>()
 
     private var autoIncrementId = 0
@@ -22,10 +25,12 @@ object ShopListRepositoryImpl : ShopListRepository {
             shopItem.id = autoIncrementId++
         }
         shopList.add(shopItem)
+        updateList()
     }
 
     override fun deleteShopItem(shopItem: ShopItem) {
         shopList.remove(shopItem)
+        updateList()
     }
 
     override fun editShopItem(shopItem: ShopItem) {
@@ -39,7 +44,11 @@ object ShopListRepositoryImpl : ShopListRepository {
             ?: throw RuntimeException("Element with id $shopItemId not found")
     }
 
-    override fun getShopList(): List<ShopItem> {
-        return shopList.toList()//копия коллекции
+    override fun getShopList(): LiveData<List<ShopItem>> {
+        return shopListLiveData//копия коллекции
+    }
+
+    private fun updateList(){
+        shopListLiveData.value = shopList.toList()
     }
 }
