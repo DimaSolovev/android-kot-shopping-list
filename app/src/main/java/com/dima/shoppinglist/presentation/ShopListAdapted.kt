@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.dima.shoppinglist.R
 import com.dima.shoppinglist.domain.ShopItem
@@ -12,11 +13,12 @@ import java.lang.RuntimeException
 
 class ShopListAdapted : RecyclerView.Adapter<ShopListAdapted.ShopItemViewHolder>() {
 
-
     var shopList = listOf<ShopItem>()
         set(value) {
+            val callback = ShopListDiffCallback(shopList, value)//для сравнивания списков
+            val diffResult = DiffUtil.calculateDiff(callback)
+            diffResult.dispatchUpdatesTo(this)
             field = value
-            notifyDataSetChanged()
         }
 
     var onShopItemLongClickListener: ((ShopItem) -> Unit)? = null
